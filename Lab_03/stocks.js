@@ -1,6 +1,7 @@
 /* eslint-disable max-len */
 const data = require('./dataConfig');
 const people = require('./people');
+const checkString = require('./checks').checkString;
 let stockData = null;
 
 /**
@@ -38,8 +39,7 @@ async function listShareholders() {
  * @return {string} A top shareholder of the stock
  */
 async function topShareholder(stockName) {
-  if (typeof(stockName)!== 'string') throw Error('bad input');
-  if ( stockName.trim().length === 0) throw Error('empty input');
+  checkString(stockName);
   const shareholders = await listShareholders();
   for (const stock of shareholders) {
     const iteratingStockName = stock.stock_name;
@@ -58,6 +58,12 @@ async function topShareholder(stockName) {
     }
   }
   throw Error('No stock with that name');
+}
+
+
+async function listStocks(firstName, lastName) {
+  checkString(firstName);
+  checkString(lastName);
 }
 
 

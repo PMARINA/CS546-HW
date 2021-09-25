@@ -1,5 +1,6 @@
 /* eslint-disable max-len */
 
+const checkString = require('./checks').checkString;
 const data = require('./dataConfig');
 let peopleData = null;
 /**
@@ -8,13 +9,7 @@ let peopleData = null;
  * @return {object} The person with the id
  */
 async function getPersonById(id) {
-  if (id === undefined) {
-    throw Error('ID was undefined');
-  }
-  if (typeof(id) !== 'string') {
-    throw Error('ID was not of the correct type: string');
-  }
-  if (id.trim().length === 0) throw Error('Empty/whitespace id not valid.');
+  checkString(id);
   if (peopleData === null) peopleData = await data.getPeople();
   let personData = null;
   peopleData.forEach((p) => {
@@ -36,12 +31,8 @@ async function getPersonById(id) {
  * @param {string} streetSuffix The suffix of the street
  */
 async function sameStreet(streetName, streetSuffix) {
-  if (typeof(streetName) !== 'string' || typeof(streetSuffix) !== 'string') {
-    throw Error('The inputs were not valid');
-  }
-  if (streetName.trim().length === 0 || streetSuffix.trim().length === 0) {
-    throw Error('The inputs must not be empty/whitespace');
-  }
+  checkString(streetName);
+  checkString(streetSuffix);
   streetName= streetName.toLowerCase();
   streetSuffix = streetSuffix.toLowerCase();
   if (peopleData === null) peopleData = await data.getPeople();
@@ -111,6 +102,8 @@ async function sameBirthday(month, day) {
   if ((typeof(month) !== 'number' && isNaN(month)) || (typeof(day) !== 'number' && isNaN(day))) throw Error('Invalid input');
   month = typeof(month) === 'number' ? month : parseInt(month);
   day = typeof(day) === 'number' ?day : parseInt(day);
+  // Empty strings return isNaN -> false, parseInt -> NaN.......... we love inconsistency.
+  if (month === NaN || day === NaN) throw Error('NaN received, verify input');
   if ( month < 1 || month > 12) throw Error('Month out of range');
   if ( day < 1 || day > 31) throw Error('Day invalid for all months');
   monthsWith30Days = [4, 6, 9, 11];
