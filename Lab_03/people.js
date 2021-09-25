@@ -62,7 +62,7 @@ async function sameStreet(streetName, streetSuffix) {
     throw Error('No more than 1 person in our data base lives on the given street');
   }
   const returnArr = Array.from(matchingPeople);
-  console.log(returnArr);
+  // console.log(returnArr);
   return returnArr;
 }
 
@@ -98,7 +98,7 @@ async function manipulateSsn() {
     'lowest': {'firstName': minSSNPerson['first_name'], 'lastName': minSSNPerson['last_name']},
     'average': average,
   };
-  console.log(returnObj);
+  // console.log(returnObj);
   return returnObj;
 }
 
@@ -129,7 +129,7 @@ async function sameBirthday(month, day) {
   Array.from(birthdayMatches).forEach((p)=>{
     returnArr.push(`${p['first_name']} ${p['last_name']}`);
   });
-  console.log(returnArr);
+  // console.log(returnArr);
   return returnArr;
 }
 
