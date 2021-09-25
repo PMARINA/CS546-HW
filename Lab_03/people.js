@@ -62,7 +62,15 @@ async function sameStreet(streetName, streetSuffix) {
  */
 async function manipulateSsn() {
   if (peopleData === null) peopleData = await data.getPeople();
-  let maxSSN = parseInt((peopleData[0]['ssn']).replace(/-/g, ''));
+  /**
+   * Process an ssn from the stored format to a number sorted by digit
+   * @param {string} ssn The ssn to process in format xxx-xxx-xxxx or similar
+   * @return {int}
+   */
+  function processSsn(ssn) {
+    return parseInt(ssn.replace(/-/g, '').split('').sort().join(''));
+  }
+  let maxSSN = processSsn(peopleData[0].ssn);
   let minSSN = maxSSN;
   let sumSSN = 0;
   let count = 0;
@@ -71,7 +79,7 @@ async function manipulateSsn() {
   peopleData.forEach((p) => {
     // console.log(p['ssn']);
     // console.log(typeof(p['ssn']));
-    const ssn = parseInt((p['ssn']).replace(/-/g, ''));
+    const ssn = processSsn(p.ssn);
     // console.log(ssn);
     count++;
     if (ssn < minSSN) {
