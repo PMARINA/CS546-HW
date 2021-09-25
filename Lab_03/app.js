@@ -54,4 +54,16 @@ async function test(callback, ...args) {
 // test(people.sameStreet, 'Sutherland', 'Point');
 
 // Verify that output is similar to the expected format... not much else can be verified.
-test(people.manipulateSsn);
+// test(people.manipulateSsn);
+
+// test(people.sameBirthday, 09, 25); // Returns: ['Khalil Ovitts',  'Erny Van Merwe', 'Emanuel Saben', 'Iorgos Tembridge']
+// test(people.sameBirthday, 9, 25); // Returns: ['Khalil Ovitts',  'Erny Van Merwe', 'Emanuel Saben', 'Iorgos Tembridge']
+// test(people.sameBirthday, '09', '25'); // Returns: ['Khalil Ovitts',  'Erny Van Merwe', 'Emanuel Saben', 'Iorgos Tembridge'] because the parameters can be parsed into valid numbers.
+// test(people.sameBirthday, 9, 31); // Err 31 days in september
+// test(people.sameBirthday, 13, 25); // Err month out of range
+// test(people.sameBirthday, 2, 29); // February with no leap years...
+// test(people.sameBirthday, '09', '31'); // 31 Days in september...
+// test(people.sameBirthday, '      ', '25'); // spaces for month...
+// test(people.sameBirthday); // no args...
+
+

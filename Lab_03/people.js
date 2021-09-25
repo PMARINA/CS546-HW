@@ -108,6 +108,8 @@ async function manipulateSsn() {
  */
 async function sameBirthday(month, day) {
   if ((typeof(month) !== 'number' && isNaN(month)) || (typeof(day) !== 'number' && isNaN(day))) throw Error('Invalid input');
+  if (typeof(month) === 'string')checkString(month);
+  if (typeof(day) === 'string')checkString(day);
   month = typeof(month) === 'number' ? month : parseInt(month);
   day = typeof(day) === 'number' ?day : parseInt(day);
   // Empty strings return isNaN -> false, parseInt -> NaN.......... we love inconsistency.
