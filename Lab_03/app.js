@@ -53,4 +53,5 @@ async function test(callback, ...args) {
 // Armando Pomery - work
 // test(people.sameStreet, 'Sutherland', 'Point');
 
+// Verify that output is similar to the expected format... not much else can be verified.
 test(people.manipulateSsn);
