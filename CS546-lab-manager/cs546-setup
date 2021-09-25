@@ -1,0 +1,33 @@
+#!/home/pmarina/anaconda3/bin/python
+import shutil
+import tempfile
+import regex as re
+import pyinputplus as pyip
+import config
+import json
+import sys
+from loguru import logger
+import os
+
+
+
+logger.remove()
+logger.start(sys.stdout, colorize=True, format="<level>{message}</level>")
+
+
+def main():
+    num = pyip.inputInt("What lab # is this? >>> ", greaterThan=1, lessThan=100)
+    lab_name = f'{config.FOLDER_NAME}{num}'
+    folder_name = f'Lab_{"%02d" % (num,)}'
+    os.mkdir(folder_name)
+    path = os.path.abspath(folder_name)
+    json_path = os.path.join(path, 'package.json')
+    with open(json_path, 'w') as f:
+        json.dump(config.get_package_json(lab_name), f, indent=4)
+    with open(os.path.join(path, 'index.js'),'w') as f:
+        f.write('\n')
+    
+
+
+if __name__ == "__main__":
+    main()

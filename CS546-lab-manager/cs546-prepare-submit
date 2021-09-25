@@ -1,0 +1,100 @@
+#!/home/pmarina/anaconda3/bin/python
+import os
+from loguru import logger
+import sys
+import json
+import config
+import pyinputplus as pyip
+import regex as re
+import tempfile
+import shutil
+from zipfile import ZipFile, ZIP_DEFLATED
+
+logger.remove()
+logger.start(sys.stdout, colorize=True, format="<level>{message}</level>")
+
+
+def verify_package_json(current_directory):
+    def check_exists():
+        os.path.join(current_directory, "package.json")
+        logger.info(f"Working on path: {current_directory}")
+        package_json_file = os.path.join(current_directory, 'package.json')
+        if not os.path.exists(package_json_file):
+            logger.error(f"package.json not found: {package_json_file}")
+            exit(1)
+        return package_json_file
+
+    def read_pjs(package_json_file):
+        with open(package_json_file) as f:
+            package_json_content_string = f.read()
+        pjs = json.loads(package_json_content_string)
+        logger.success(f"Found project: {pjs['name']}")
+        return pjs
+
+    def check_module_name(pjs):
+        name = pjs['name']
+        if not re.match(config.NAME_REGEX, name):
+            logger.error(
+                f"Module name was not valid (\"{name}\") expected \"cs-546-lab-#\"")
+            exit(1)
+        logger.success(f"The module was correctly named: {name}")
+
+    def check_author(pjs):
+        expected_author = f"{config.FNAME} {config.LNAME} {config.CWID}"
+        if not pjs['author'] == expected_author:
+            logger.error(
+                f"Author was: \"{pjs['author']}\", expected \"{expected_author}\"")
+            exit(1)
+        logger.success(f"Correct author found: {expected_author}")
+
+    def check_start_script(pjs):
+        if not 'scripts' in pjs or not 'start' in pjs['scripts']:
+            logger.error("Start script not found in package.json")
+            exit(1)
+        start_script = pjs['scripts']['start']
+        if start_script != config.DEFAULT_START_SCRIPT:
+            logger.warning(
+                f"Start script found: \"{start_script}\" did not match the default: \"{config.DEFAULT_START_SCRIPT}\"")
+            should_continue = pyip.inputYesNo("Continue? >>> ") == "yes"
+            if not should_continue:
+                logger.error("Start script was unsatisfactory")
+                exit(1)
+        logger.success("Found start script in package.json")
+
+    fname = check_exists()
+    pjs = read_pjs(fname)
+    check_module_name(pjs)
+    check_author(pjs)
+    check_start_script(pjs)
+
+
+def prepare_zip(current_directory):
+    with tempfile.TemporaryDirectory() as temppath:
+        folder_name = os.path.split(current_directory)[-1]
+        src_dir = os.path.join(temppath, folder_name)
+        if os.path.exists(src_dir):
+            shutil.rmtree(src_dir)
+        shutil.copytree(current_directory, src_dir)
+        node_modules_path = os.path.join(src_dir, 'node_modules')
+        if os.path.exists(node_modules_path):
+            shutil.rmtree(node_modules_path)
+        zip_out_path = os.path.join(os.path.expanduser(
+            f'~/Desktop'), f'{config.LNAME}_{config.FNAME}.zip')
+        with ZipFile(zip_out_path, 'w', compression=ZIP_DEFLATED, compresslevel=9) as zipObj:
+            # Iterate over all the files in directory
+            for folderName, subfolders, filenames in os.walk(src_dir):
+                for filename in filenames:
+                    # create complete filepath of file in directory
+                    filePath = os.path.join(folderName, filename)
+                    # Add file to zip
+                    zipObj.write(filePath, os.path.basename(filePath))
+
+
+def main():
+    current_directory = os.path.abspath(os.getcwd())
+    verify_package_json(current_directory)
+    prepare_zip(current_directory)
+
+
+if __name__ == "__main__":
+    main()

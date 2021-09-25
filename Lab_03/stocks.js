@@ -1,0 +1,1 @@
+module.exports = {listShareholders, topShareholders, listStocks, getStockById}

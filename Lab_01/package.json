@@ -1,0 +1,23 @@
+{
+  "name": "lab_01",
+  "version": "1.0.0",
+  "description": "",
+  "main": "lab1.js",
+  "scripts": {
+    "test": "node lab1.test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pmarina/cs546-hw.git"
+  },
+  "author": "***REMOVED*** ***REMOVED***",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pmarina/cs546-hw/issues"
+  },
+  "homepage": "https://github.com/pmarina/cs546-hw#readme",
+  "devDependencies": {
+    "eslint": "^7.32.0",
+    "eslint-config-google": "^0.14.0"
+  }
+}
