@@ -3,7 +3,7 @@ const data = require('./dataConfig');
 const people = require('./people');
 const checkString = require('./checks').checkString;
 let stockData = null;
-
+let peopleData = null;
 /**
  * List shareholders
  */
@@ -60,25 +60,55 @@ async function topShareholder(stockName) {
   throw Error('No stock with that name');
 }
 
-
+/**
+ * Return all stocks, quantities owned by the person.
+ * @param {string} firstName First Name to look for
+ * @param {string} lastName Last Name to look for
+ */
 async function listStocks(firstName, lastName) {
   checkString(firstName);
   checkString(lastName);
+  if (peopleData === null) peopleData = await data.getPeople();
+  if (stockData === null) stockData = await data.getStocks();
+  let personId = null;
+  for (const person of peopleData) {
+    if (person.first_name === firstName && person.last_name === lastName) {
+      personId = person.id;
+      break;
+    }
+  }
+  if (personId === null) throw Error('Person with given names not found in the database of people');
+  retArr = [];
+  for (const stock of stockData) {
+    shareholders = stock.shareholders;
+    for (const holder of shareholders) {
+      if (holder.userId === personId) {
+        stockName = stock.stock_name;
+        numShares = holder.number_of_shares;
+        retArr.push({
+          'stock_name': stockName,
+          'number_of_shares': numShares,
+        });
+        break;
+      }
+    }
+  }
+  if (retArr.length === 0) throw Error('Person does not own any stocks');
+  return retArr;
 }
 
-
-// module.exports = {listShareholders, topShareholders, listStocks, getStockById};
 /**
- * Do something
+ * Get a stock given its id
+ * @param {string} id of the stock
+ * @return {object} The stock
  */
-async function main() {
-  const something = await topShareholder('Aeglea BioTherapeutics, Inc.').catch((e)=>console.log(e));
-  console.log(something);
-  return;
-  // <stackOverflowSnippet src="https://stackoverflow.com/a/10729284">
-  const util = require('util');
-  console.log(util.inspect(something, {showHidden: false, depth: null, colors: true}));
-  // </stackOverflowSnippet>
+async function getStockById(id) {
+  checkString(id);
+  if (stockData === null)stockData = await data.getStocks();
+  for (const stock of stockData) {
+    if (stock['id'] === id) return stock;
+  }
+  throw Error('stock not found');
 }
 
-main();
+module.exports = {listShareholders, topShareholder, listStocks, getStockById};

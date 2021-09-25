@@ -1,4 +1,5 @@
-#!/home/pmarina/anaconda3/bin/python
+#!/usr/bin/env python3
+
 import os
 from loguru import logger
 import sys
@@ -9,6 +10,7 @@ import regex as re
 import tempfile
 import shutil
 from zipfile import ZipFile, ZIP_DEFLATED
+import glob
 
 logger.remove()
 logger.start(sys.stdout, colorize=True, format="<level>{message}</level>")
@@ -78,20 +80,23 @@ def prepare_zip(current_directory):
         node_modules_path = os.path.join(src_dir, 'node_modules')
         if os.path.exists(node_modules_path):
             shutil.rmtree(node_modules_path)
-        zip_out_path = os.path.join(os.path.expanduser(
+        eslint_paths = glob.glob(os.path.join(src_dir, '.eslint.*')
+        for path in eslint_paths:
+            os.remove(path)
+        zip_out_path=os.path.join(os.path.expanduser(
             f'~/Desktop'), f'{config.LNAME}_{config.FNAME}.zip')
         with ZipFile(zip_out_path, 'w', compression=ZIP_DEFLATED, compresslevel=9) as zipObj:
             # Iterate over all the files in directory
             for folderName, subfolders, filenames in os.walk(src_dir):
                 for filename in filenames:
                     # create complete filepath of file in directory
-                    filePath = os.path.join(folderName, filename)
+                    filePath=os.path.join(folderName, filename)
                     # Add file to zip
                     zipObj.write(filePath, os.path.basename(filePath))
 
 
 def main():
-    current_directory = os.path.abspath(os.getcwd())
+    current_directory=os.path.abspath(os.getcwd())
     verify_package_json(current_directory)
     prepare_zip(current_directory)
 
