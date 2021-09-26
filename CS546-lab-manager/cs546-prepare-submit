@@ -80,7 +80,7 @@ def prepare_zip(current_directory):
         node_modules_path = os.path.join(src_dir, 'node_modules')
         if os.path.exists(node_modules_path):
             shutil.rmtree(node_modules_path)
-        eslint_paths = glob.glob(os.path.join(src_dir, '.eslint.*')
+        eslint_paths = glob.glob(os.path.join(src_dir, '.eslint.*'))
         for path in eslint_paths:
             os.remove(path)
         zip_out_path=os.path.join(os.path.expanduser(

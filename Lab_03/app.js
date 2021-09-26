@@ -10,8 +10,15 @@ async function test(callback, ...args) {
   const result = await callback(...args).catch((e)=>{
     console.log(e);
   });
-  if (result)console.log(result);
+  if (result && typeof(result) === 'object') {
+    const util = require('util');
+    console.log(util.inspect(result, {showHidden: false, depth: null, colors: true}));
+  } else if (result) {
+    console.log(result);
+  }
 }
+
+// Uncomment 1 by 1 because otherwise the async nature will return everything out of order = hard to correlate...
 
 // People code testing
 
@@ -66,4 +73,34 @@ async function test(callback, ...args) {
 // test(people.sameBirthday, '      ', '25'); // spaces for month...
 // test(people.sameBirthday); // no args...
 
+// Test stocks things...
 
+// Check if first few rows match expected...
+// test(stocks.listShareholders);
+
+// Returns: "With 449 shares in Aeglea BioTherapeutics, Inc., Caresse Clissett is the top shareholder."
+// test(stocks.topShareholder, 'Aeglea BioTherapeutics, Inc.');
+
+// Returns: "With 372 shares in Nuveen Floating Rate Income Fund, Thorstein Sarjeant is the top shareholder."
+// test(stocks.topShareholder, 'Nuveen Floating Rate Income Fund');
+
+// Returns: "Powell Industries, Inc. currently has no shareholders."
+// test(stocks.topShareholder, 'Powell Industries, Inc.');
+
+// test(stocks.topShareholder, 43);
+// test(stocks.topShareholder, '     ');
+// test(stocks.topShareholder, 'Foobar Inc');
+// test(stocks.topShareholder);
+
+// test(stocks.listStocks, 'Grenville', 'Pawelke');
+// test(stocks.listStocks, 'Patrick', 'Hill');
+// test(stocks.listStocks);
+// test(stocks.listStocks, 'foo');
+// test(stocks.listStocks, '      ', '        ');
+// test(stocks.listStocks, 1, 2);
+
+// test(stocks.getStockById, 'f652f797-7ca0-4382-befb-2ab8be914ff0');
+// test(stocks.getStockById, -1);
+// test(stocks.getStockById, 1001);
+// test(stocks.getStockById);
+// test(stocks.getStockById, '7989fa5e-5617-43f7-a931-46036f9dbcff');
