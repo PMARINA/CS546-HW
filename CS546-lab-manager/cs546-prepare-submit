@@ -78,6 +78,9 @@ def prepare_zip(current_directory):
             shutil.rmtree(src_dir)
         shutil.copytree(current_directory, src_dir)
         node_modules_path = os.path.join(src_dir, 'node_modules')
+        pkg_lk_json = os.path.join(src_dir, 'package-lock.json')
+        if os.path.exists(pkg_lk_json):
+            os.remove(pkg_lk_json)
         if os.path.exists(node_modules_path):
             shutil.rmtree(node_modules_path)
         eslint_paths = glob.glob(os.path.join(src_dir, '.eslint.*'))
