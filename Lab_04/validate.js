@@ -47,6 +47,9 @@ function validateName(name) {
 function validateLocation(loc) {
   checkType('Location', loc, 'string');
   checkNotEmptySpaces('Location', loc);
+  if (!loc.match(/.+, .+/)) {
+    throw Error('Location does not follow the required format: city, area.');
+  }
 }
 
 /**
@@ -155,10 +158,8 @@ function validateId(id) {
   checkType('id', id, 'string');
   checkNotEmptySpaces('id', id);
   // The following line will throw if not a valid object ID.
-  // Ignore eslint error because I didn't write it
-  // eslint-disable-next-line new-cap
-  mdb.ObjectId(id);
-  throw Error('Not implemented');
+  new mdb.ObjectId(id);
+  //   throw Error('Not implemented');
   // Check if the id is in the database
   // (perhaps this should be part of the actual method?)
 }

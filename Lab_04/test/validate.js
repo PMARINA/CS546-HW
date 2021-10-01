@@ -1,5 +1,6 @@
 const expect = require('chai').expect;
 const validate = require('../validate');
+const mdb = require('mongodb');
 describe('Validation Functions', function() {
   describe('Check Type', function() {
     it('Checks array input', function() {
@@ -108,9 +109,20 @@ describe('Validation Functions', function() {
         validate.validateLocation('');
       }).to.throw(/^Location.*?$/);
     });
+    it('Checks for incorrect inputs', function() {
+      expect(function() {
+        validate.validateLocation('wrong format');
+      }).to.throw(/^Location.*?$/);
+      expect(function() {
+        validate.validateLocation('wrong format,');
+      }).to.throw(/^Location.*?$/);
+      expect(function() {
+        validate.validateLocation(', wrong');
+      }).to.throw(/^Location.*?$/);
+    });
     it('Works when a string is passed', function() {
       expect(function() {
-        validate.validateName('testParameter');
+        validate.validateName('new york, new york');
       }).to.not.throw();
     });
   });
@@ -408,6 +420,20 @@ describe('Validation Functions', function() {
       }).to.throw(/[Ss]ervice/);
       expect(() => {
         const inputToSend = {};
+        inputToSend.dineIn = true;
+        inputToSend.takeOut = false;
+        inputToSend.delivery = true;
+        inputToSend.DiGiorno = true;
+        validate.validateServiceOptions(inputToSend);
+      }).to.throw(/[Ss]ervice/);
+      expect(() => {
+        const inputToSend = {};
+        inputToSend.dineIn = true;
+        inputToSend.takeOut = false;
+        validate.validateServiceOptions(inputToSend);
+      }).to.throw(/[Ss]ervice/);
+      expect(() => {
+        const inputToSend = {};
         inputToSend.dineIn = 5;
         inputToSend.takeOut = false;
         inputToSend.delivery = true;
@@ -474,8 +500,33 @@ describe('Validation Functions', function() {
     });
   });
 
-  describe('Validate Id', () => { });
+  describe('Validate Id', () => {
+    it('Checks for no input', ()=>{
+      expect(()=>{
+        validate.validateId();
+      }).to.throw();
+    });
+    it('checks for non/empty strings', ()=>{
+      expect(()=>{
+        validate.validateId('');
+      }).to.throw();
+      expect(()=>{
+        validate.validateId('                        ');
+      }).to.throw();
+      expect(()=>{
+        validate.validateId(true);
+      }).to.throw();
+      expect(()=>{
+        validate.validateId(123);
+      }).to.throw();
+      expect(()=>{
+        validate.validateId(new mdb.ObjectId('ffffffffffffffffffffffff'));
+      }).to.throw();
+    });
+    it('Works for correct input', ()=>{
+      expect(()=>{
+        validate.validateId('ffffffffffffffffffffffff');
+      }).to.not.throw();
+    });
+  });
 });
-
-// Remove when finished
-throw Error('Not Implemented - id');
