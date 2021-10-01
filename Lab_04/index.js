@@ -41,26 +41,66 @@ async function rename(id) {
 (async () => {
   try {
     // 1
-    const pierce = await addPierce();
+    let pierce = undefined;
+    let mcdonalds = undefined;
+    let costco = undefined;
+    try {
+      pierce = await addPierce();
+    } catch (e) {
+      console.log(`1 failed with ${e}`);
+    }
     // 2
-    getOne(pierce._id);
+    try {
+      getOne(pierce._id);
+    } catch (e) {
+      console.log(`2 failed with ${e}`);
+    }
     // 3
-    const mcdonalds = await addMcDonalds();
+    try {
+      mcdonalds = await addMcDonalds();
+    } catch (e) {
+      console.log(`3 failed with ${e}`);
+    }
     // 4
-    getAll();
+    try {
+      getAll();
+    } catch (e) {
+      console.log(`4 failed with ${e}`);
+    }
     // 5
-    const costco = await addCostco();
+    try {
+      costco = await addCostco();
+    } catch (e) {
+      console.log(`5 failed with ${e}`);
+    }
     // 6
-    await getOne(costco._id);
+    try {
+      await getOne(costco._id);
+    } catch (e) {
+      console.log(`6 failed with ${e}`);
+    }
     // 7 + 8
-    await rename(pierce._id);
+    try {
+      await rename(pierce._id);
+    } catch (e) {
+      console.log(`7 & 8 failed with ${e}`);
+    }
     // rip 9
-    await remove(mcdonalds._id);
+    try {
+      await remove(mcdonalds._id);
+    } catch (e) {
+      console.log(`9 failed with ${e}`);
+    }
     // 10
-    await getAll();
+    try {
+      await getAll();
+    } catch (e) {
+      console.log(`10 failed with ${e}`);
+    }
     // 11
     try {
-      await restaurants.create('a name', 'location, of world', '123-456-7890', 'https://www.google.com', '$', ['testCuisine'], 2, null); console.log('11 failed');
+      await restaurants.create('a name', 'location, of world', '123-456-7890', 'https://www.google.com', '$', ['testCuisine'], 2, null);
+      console.log('11 failed');
     } catch (e) {
       console.log('11 passed');
     }
@@ -72,13 +112,15 @@ async function rename(id) {
     }
     // 13
     try {
-      await restaurants.rename('ffffffffffffffffffffffff'); console.log('13 failed');
+      await restaurants.rename('ffffffffffffffffffffffff');
+      console.log('13 failed');
     } catch (e) {
       console.log('13 passed');
     }
     // 14
     try {
-      await restaurants.rename('0xffffffffffffffffffffffff'); console.log('14 failed');
+      await restaurants.rename('0xffffffffffffffffffffffff');
+      console.log('14 failed');
     } catch (e) {
       console.log('14 passed');
     }
@@ -95,5 +137,6 @@ async function rename(id) {
   } finally {
     const client = await db.getClient();
     await client.close();
+    process.exit();
   }
 })();

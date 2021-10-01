@@ -168,7 +168,11 @@ async function rename(id, newWebsite) {
   // Assert that it exists
   const existingDocument = await get(id);
 
-  if (existingDocument.website === newWebsite) {
+  if (typeof existingDocument.website != typeof newWebsite) {
+    throw Error('Type mismatch for emails.');
+  }
+
+  if (existingDocument.website.toLowerCase() === newWebsite.toLowerCase()) {
     throw Error('Website is exactly the same.');
   }
 
