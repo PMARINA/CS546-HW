@@ -15,6 +15,7 @@ import glob
 logger.remove()
 logger.start(sys.stdout, colorize=True, format="<level>{message}</level>")
 
+ZIPFILE_NAME = f'{config.LNAME}_{config.FNAME}_CS546_{config.SECTION}.zip'
 
 def verify_package_json(current_directory):
     def check_exists():
@@ -87,15 +88,15 @@ def prepare_zip(current_directory):
         for path in eslint_paths:
             os.remove(path)
         zip_out_path=os.path.join(os.path.expanduser(
-            f'~/Desktop'), f'{config.LNAME}_{config.FNAME}.zip')
+            f'~/Desktop'), ZIPFILE_NAME)
         with ZipFile(zip_out_path, 'w', compression=ZIP_DEFLATED, compresslevel=9) as zipObj:
             # Iterate over all the files in directory
-            for folderName, subfolders, filenames in os.walk(src_dir):
-                for filename in filenames:
+            for root, dirs, files in os.walk(src_dir):
+                for filename in files:
                     # create complete filepath of file in directory
-                    filePath=os.path.join(folderName, filename)
+                    filePath=os.path.join(root, filename)
                     # Add file to zip
-                    zipObj.write(filePath, os.path.basename(filePath))
+                    zipObj.write(filePath, os.path.relpath(os.path.join(root, filename), src_dir))
 
 
 def main():
