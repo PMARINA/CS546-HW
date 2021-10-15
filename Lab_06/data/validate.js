@@ -1,5 +1,6 @@
 const mdb = require('mongodb');
 
+const dateRegex = /^(0[1-9]|1[0-2])\/(0[1-9]|[1-2][0-9]|3[0-1])\/(\d{4})$/;
 /**
  * Verify that the type of a variable is the expected type(s)
  * @param {string} parameterName The name of the parameter
@@ -176,13 +177,48 @@ function tryTrim(v) {
   return v;
 }
 
-function validateDate() {
-
+/**
+ * Validate if a date is in the expected format.
+ * @param {string} date A date in MM/DD/YYYY Format
+ */
+function validateDate(date) {
+  checkType('Date', date, 'string');
+  if (! date.match(dateRegex)) {
+    throw Error(`Date (${date}) is not in the correct format` +
+    ' (MM/DD/YYYY) or is implausible.');
+  };
 }
 
-function validateDateIsToday() {
+/**
+ * Validate if the date provided falls within the current date.
+ * Note that this does not consider timezones and potential issues
+ * with 12h/other timezone offsets that could mess with dates
+ * syncing between server/client
+ *
+ * @param {string} date The date specified
+ */
+function validateDateIsToday(date) {
+  validateDate(date);
+  const today = new Date();
 
+  const matchArr = date.match(dateRegex);
+
+  const inputMonth = matchArr[1];
+  const inputDay = matchArr[2];
+  const inputYear = matchArr[3];
+
+  const inputDate =
+  new Date(year=inputYear, monthIndex = inputMonth, date=inputDay);
+
+  if (inputDate.getFullYear() !== today.getFullYear() ||
+        inputDate.getMonth() !== today.getMonth() ||
+          inputDate.getDate() !== today.getDate()) {
+    throw Error('The date provided was not the same as today\'s date.' +
+  'Please double check your system time and report'+
+  'this issue to the server administrator.');
+  }
 }
+
 module.exports = {
   checkType,
   checkNotEmptySpaces,
@@ -197,5 +233,5 @@ module.exports = {
   validateId,
   tryTrim,
   validateDate,
-  validasteDateIsToday,
+  validateDateIsToday,
 };

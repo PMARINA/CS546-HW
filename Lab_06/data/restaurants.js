@@ -34,11 +34,11 @@ function trimAndValidate(name, location, phoneNumber, website,
   priceRange = tryTrim(priceRange);
   try {
     newCuisines = [];
-    cuisines.forEach((element)=>
+    cuisines.forEach((element) =>
       newCuisines.push(tryTrim(element)),
     );
     cuisines = newCuisines;
-  } catch (e) {}
+  } catch (e) { }
 
   validateName(name);
   validateLocation(location);
@@ -71,8 +71,10 @@ function trimAndValidate(name, location, phoneNumber, website,
  */
 async function create(name, location, phoneNumber, website,
     priceRange, cuisines, serviceOptions) {
-  ({name, location, phoneNumber, website,
-    priceRange, cuisines, serviceOptions} =
+  ({
+    name, location, phoneNumber, website,
+    priceRange, cuisines, serviceOptions,
+  } =
     trimAndValidate(name, location, phoneNumber,
         website, priceRange, cuisines, serviceOptions));
   const collection = await getCollection();
@@ -111,13 +113,51 @@ async function create(name, location, phoneNumber, website,
  * @return {object[]}
  */
 async function getAll() {
-  const collection = await getCollection();
-  arrWithObjectIds = await collection.find({}).toArray();
-  // change the ObjectId objs to strings
-  arrWithObjectIds.forEach((element) => {
-    element._id = element._id.toString();
-  });
+  const arrWithObjectIds = getAndProcess(null, true);
   return arrWithObjectIds;
+}
+
+/**
+ * Get restaurants from the database.
+ * @param {[string]} id The id if not all
+ * @param {boolean} all Whether or not to fetch all restaurantsCollection
+ * @return {object} Array of objects or object, depending on args
+ */
+async function getAndProcess(id, all) {
+  const collection = await getCollection();
+  const stringifyIds = {
+    $addFields: {
+      '_id': {
+        '$convert': {
+          input: '$$CURRENT._id',
+          to: 'string',
+        },
+      },
+      'reviews': {
+        '$map': {
+          'input': '$reviews', // Get only unique ids from the array
+          'as': 'rev',
+          'in': {
+            $setField: {
+              'field': '_id',
+              'input': '$$rev',
+              'value': {
+                '$convert': {
+                  input: '$$rev._id',
+                  to: 'string',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  };
+  const pipeline = all? [stringifyIds] : [
+    {'$match': {'_id': new mdb.ObjectId(id)}},
+    stringifyIds];
+  res = await collection.aggregate(pipeline);
+  return res;
 }
 
 /**
@@ -128,10 +168,8 @@ async function getAll() {
 async function get(id) {
   id = tryTrim(id);
   validateId(id);
-  const collection = await getCollection();
-  const foundRestaurant =
-    await collection.findOne({'_id': new mdb.ObjectId(id)});
-  if (!foundRestaurant) throw Error('Unable to find result for specified id');
+  const res = getAndProcess(id, false);
+  if (!res) throw Error('Unable to find result for specified id');
   foundRestaurant._id = foundRestaurant._id.toString();
   return foundRestaurant;
 }
@@ -156,7 +194,7 @@ async function remove(id) {
     return `${restaurantName} has been successfully deleted!`;
   }
   throw Error(`Unable to remove object with id: ${id}.` +
-  ' Have you confirmed that it exists?');
+    ' Have you confirmed that it exists?');
 }
 
 
@@ -174,10 +212,12 @@ async function remove(id) {
  */
 async function update(id, name, location, phoneNumber, website,
     priceRange, cuisines, serviceOptions) {
-  ({name, location, phoneNumber, website,
-    priceRange, cuisines, serviceOptions} =
-  trimAndValidate(name, location, phoneNumber,
-      website, priceRange, cuisines, serviceOptions));
+  ({
+    name, location, phoneNumber, website,
+    priceRange, cuisines, serviceOptions,
+  } =
+    trimAndValidate(name, location, phoneNumber,
+        website, priceRange, cuisines, serviceOptions));
   id = tryTrim(id);
   validateId(id);
   const collection = await getCollection();
@@ -211,17 +251,4 @@ async function update(id, name, location, phoneNumber, website,
   return objToReturn;
 }
 
-/**
- * Update the average rating for a given restaurant
- * @param {string} id The id of the restaurant whose ratings need to be refreshed
- */
-async function updateRatingsFromReviews(id){
-  validateId(id);
-  let col = await getCollection();
-  const colName = col.s.namespace.collection;
-  const averageReviewsOp = {"$divide": [{"$sum": "$reviews.rating"}, {"$size":"$reviews"}]}
-  const mongId = new mdb.ObjectId(id);
-  await col.aggregate([{"$match":{"_id":mongId}}, {"$set": {"totalRating": averageReviewsOp}}, {"$merge":{into:colName, whenMatched:"merge"}}]);
-}
-
-module.exports = {create, getAll, get, update, updateRatingsFromReviews, remove};
+module.exports = {create, getAll, get, update, remove};
