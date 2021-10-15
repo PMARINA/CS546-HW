@@ -211,4 +211,17 @@ async function update(id, name, location, phoneNumber, website,
   return objToReturn;
 }
 
-module.exports = {create, getAll, get, update, remove};
+/**
+ * Update the average rating for a given restaurant
+ * @param {string} id The id of the restaurant whose ratings need to be refreshed
+ */
+async function updateRatingsFromReviews(id){
+  validateId(id);
+  let col = await getCollection();
+  const colName = col.s.namespace.collection;
+  const averageReviewsOp = {"$divide": [{"$sum": "$reviews.rating"}, {"$size":"$reviews"}]}
+  const mongId = new mdb.ObjectId(id);
+  await col.aggregate([{"$match":{"_id":mongId}}, {"$set": {"totalRating": averageReviewsOp}}, {"$merge":{into:colName, whenMatched:"merge"}}]);
+}
+
+module.exports = {create, getAll, get, update, updateRatingsFromReviews, remove};
