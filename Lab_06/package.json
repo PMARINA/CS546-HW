@@ -1,0 +1,29 @@
+{
+    "name": "cs-546-lab-6",
+    "version": "1.0.0",
+    "description": "CS 546WS - Stevens Institute of Technology - Fall 2021",
+    "main": "index.js",
+    "scripts": {
+        "start": "node app.js",
+        "test": "mocha --reporter spec"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/PMARINA/CS546-HW.git"
+    },
+    "author": "***REMOVED*** ***REMOVED*** ***REMOVED***",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/PMARINA/CS546-HW/issues"
+    },
+    "homepage": "https://github.com/PMARINA/CS546-HW#readme",
+    "devDependencies": {
+        "chai": "^4.3.4",
+        "eslint": "^8.0.1",
+        "eslint-config-google": "^0.14.0",
+        "mocha": "^9.1.2"
+    },
+    "dependencies": {
+        "mongodb": "^4.1.3"
+    }
+}
