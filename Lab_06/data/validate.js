@@ -159,7 +159,14 @@ function validateId(id) {
   checkType('id', id, 'string');
   checkNotEmptySpaces('id', id);
   // The following line will throw if not a valid object ID.
-  new mdb.ObjectId(id);
+  try {
+    new mdb.ObjectId(id);
+  } catch (e) {
+    throw new Error(
+        'Invalid MongoDB.ObjectId received. ' +
+        `Please double check your input (${id})`,
+    );
+  }
   //   throw Error('Not implemented');
   // Check if the id is in the database
   // (perhaps this should be part of the actual method?)

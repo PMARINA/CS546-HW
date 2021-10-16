@@ -28,30 +28,42 @@ async function doTesting(col) {
   })
 
   bobId = bobInfo.insertedId;
-  jamieId = jamieInfo.insertedId;
 
   await col.updateOne({ _id: bobId }, { $push: { "phoneNumbers": { _id: new mdb.ObjectId(), number: "123-456-7890" } } })
   await col.updateOne({ _id: bobId }, { $push: { "phoneNumbers": { _id: new mdb.ObjectId(), number: "567-890-1234" } } })
 
-  jamiePhoneId = new mdb.ObjectId();
-  await col.updateOne({ _id: jamieId }, { $push: { "phoneNumbers": { _id: new mdb.ObjectId(), number: "123-456-999-888-7777" } } })
-  await col.updateOne({ _id: jamieId }, { $push: { "phoneNumbers": { _id: jamiePhoneId, number: "999-888-7777" } } })
-
-  // Begin Solution
-  const filter = {"phoneNumbers._id": jamiePhoneId};
+  const filter = { _id: bobId };
   const matchingStage = {
     $match: filter
   }
-
   const getNumbersOnly = { $replaceWith: { "result": "$phoneNumbers" } }
-
-  const unwindArr = {$unwind: "$result"}
-
-  const matchIdInSubDoc = {$match: {"result._id": jamiePhoneId}};
-
-  results = await col.aggregate([matchingStage, getNumbersOnly, unwindArr, matchIdInSubDoc])
-  results = await results.toArray()
-  console.log(results[0].result);
+  const updateIds = {
+    $set: {
+      "result": {
+        $map: {
+          input: '$result',
+          as: "inVal",
+          in: {
+            $setField: {
+              field: "_id",
+              input: "$$inVal",
+              value: {
+                $convert: {
+                  input: "$$inVal._id",
+                  to: "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  const pipeline = [matchingStage, getNumbersOnly, updateIds]
+  let res = await col.aggregate(pipeline)
+  res = await res.toArray()
+  console.log(res);
+  console.log(res[0].result);
 }
 
 (async () => {

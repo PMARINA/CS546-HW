@@ -73,7 +73,7 @@ async function create(restaurantId,
   review = tryTrim(review);
 
   validateId(restaurantId);
-  [restaurantId, title, reviewer, review].forEach((s)=>validateName(s));
+  [restaurantId, title, reviewer, review].forEach((s) => validateName(s));
   validateDate(dateofReview);
   validateDateIsToday(dateOfReview);
 
@@ -95,7 +95,7 @@ async function create(restaurantId,
   if (!result.acknowledged) {
     throw Error(
         'Database did not acknowledge creation of review from ' +
-        `${reviewer} for ${restaurantId}`,
+      `${reviewer} for ${restaurantId}`,
     );
   }
   if (result.matchedCount !== 1) {
@@ -104,14 +104,117 @@ async function create(restaurantId,
   await updateRestaurantAverageRating(restaurantId);
   return await restaurants.get(restaurantId);
 }
+
+/**
+ * Get all reviews for a given restaurant.
+ * @param {string} restaurantId Id of the restaurant
+ */
 async function getAll(restaurantId) {
+  restaurantId = tryTrim(restaurantId);
 
+  validateId(restaurantId);
+  const filter = {_id: restaurantId};
+  const matchingStage = {
+    $match: filter,
+  };
+  const getReviewsOnly = {$replaceWith: {'result': '$reviews'}};
+  const updateIds = {
+    $set: {
+      'result': {
+        $map: {
+          input: '$result',
+          as: 'inVal',
+          in: {
+            $setField: {
+              field: '_id',
+              input: '$$inVal',
+              value: {
+                $convert: {
+                  input: '$$inVal._id',
+                  to: 'string',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  };
+  const pipeline = [matchingStage, getReviewsOnly, updateIds];
+  let res = await col.aggregate(pipeline);
+  res = await res.toArray();
+  if (!res) {
+    throw new Error(`No restaurant by ID (${id}) exists`);
+  }
+  return res[0].result;
 }
+/**
+ * Get the review with specified ID if it exists.
+ * @param {string} reviewId The id of the review to fetch.
+ * @return {object} Returns the object requested.
+ */
 async function get(reviewId) {
+  reviewId = tryTrim(reviewId);
+  reviewId = validateId(reviewId);
+  const filter = {'reviews._id': reviewId};
+  const matchingStage = {
+    $match: filter,
+  };
 
+  const getReviewsOnly = {$replaceWith: {'result': '$reviews'}};
+
+  const unwindArr = {$unwind: '$result'};
+
+  const matchIdInSubDoc = {$match: {'result._id': reviewId}};
+
+  results = await col.aggregate(
+      [matchingStage, getReviewsOnly, unwindArr, matchIdInSubDoc],
+  );
+  results = await results.toArray();
+  if (!results) {
+    throw new Error(`No review by id (${reviewId}) exists.`);
+  }
+  return results[0].result;
 }
-async function remove(reviewId) {
 
+/**
+ * Remove an id from a restaurant's DB entry.
+ * @param {string} reviewId The id of the review to remove.
+ */
+async function remove(reviewId) {
+  // Ensure that the review exists
+  review = await get(reviewId);
+  // Delete the review
+
+  const col = await getCollection();
+  restaurantDocument = await col.findOne({'reviews._id': reviewId});
+  const restaurantId = restaurantDocument._id;
+  updateResult = await col.updateOne(
+      {_id: restaurantId},
+      {
+        $pull:
+        {
+          reviews:
+            {_id: reviewId},
+        },
+      },
+  );
+
+  if (!updateResult.acknowledged) {
+    throw new Error(
+        'Database failed to acknowledge pulling the review ' +
+        'from the restaurant\'s document.',
+    );
+  }
+
+  if (updateResult.updatedCount !== 1) {
+    // This shouldn't happen
+    // 1. The get operation ensures it actually exists
+    // 2. MongoDB ObjectIds are guaranteed to be unique
+    throw new Error('Multiple reviews deleted due to nonunique ID');
+  }
+
+  updateRestaurantAverageRating(restaurantId);
 }
 
 module.exports = {create, getAll, get, remove};

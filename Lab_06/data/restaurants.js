@@ -228,27 +228,21 @@ async function update(id, name, location, phoneNumber, website,
     'website': website,
     'priceRange': priceRange,
     'cuisines': cuisines,
-    'overallRating': 0,
     'serviceOptions': serviceOptions,
-    'reviews': [],
   };
 
-  const inserted = await collection.insertOne(objToInsert);
+  const inserted = await collection.findOneAndUpdate(
+      {_id: new mdb.ObjectId(id)},
+      {$set: objToInsert},
+      {returnNewDocument: true},
+  );
 
-  if (!inserted.acknowledged) {
-    throw Error('Something went wrong during insertion');
+  if (!inserted) {
+    throw Error('Something went wrong during update.' +
+    ' Does the restaurant exist?');
   }
-  // Assign id first so it gets to the top of the keys
-  const insertedId = inserted.insertedId.toString();
-  const objToReturn = {'_id': insertedId};
 
-  // Combine the two objects, which messes up the id key
-  Object.assign(objToReturn, objToInsert);
-
-  // Reassign the id key
-  objToReturn._id = insertedId;
-
-  return objToReturn;
+  return inserted;
 }
 
 module.exports = {create, getAll, get, update, remove};
