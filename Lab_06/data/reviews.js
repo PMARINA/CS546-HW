@@ -1,6 +1,9 @@
 
-const getCollection = require('./config/mongoCollections').restaurants;
+const getCollection = require('../config/mongoCollections').restaurants;
 const restaurants = require('./restaurants');
+const ServerSideError = require('./errors').ServerSideError;
+// const ClientSideError = require('./errors').ClientSideError;
+const ResourceNotFoundError = require('./errors').ResourceNotFoundError;
 const mdb = require('mongodb');
 ({
   validateName,
@@ -46,13 +49,15 @@ async function updateRestaurantAverageRating(fromRestaurantId) {
     },
   };
   const mongoIdToMatch = new mdb.ObjectId(fromRestaurantId);
-  await restaurantsCollection.aggregate([
+  const res = await restaurantsCollection.aggregate([
     // Get only the restaurant with the id (assume it's always unique)
     {'$match': {'_id': mongoIdToMatch}},
     // Get the average rating using the predefined operation
     {'$set': {'overallRating': averageReviewsOp}},
     // Merge the result back into the original document
     {'$merge': {into: colName, whenMatched: 'merge'}}]);
+  await res.toArray();
+  // MongoDB is lazy --- this line actually causes the operation to happen
 }
 
 /**
@@ -74,7 +79,7 @@ async function create(restaurantId,
 
   validateId(restaurantId);
   [restaurantId, title, reviewer, review].forEach((s) => validateName(s));
-  validateDate(dateofReview);
+  validateDate(dateOfReview);
   validateDateIsToday(dateOfReview);
 
   const reviewObj = {
@@ -93,13 +98,15 @@ async function create(restaurantId,
   const restaurantsCollection = await getCollection();
   result = await restaurantsCollection.updateOne(filter, operation);
   if (!result.acknowledged) {
-    throw Error(
+    throw new ServerSideError(
         'Database did not acknowledge creation of review from ' +
       `${reviewer} for ${restaurantId}`,
     );
   }
   if (result.matchedCount !== 1) {
-    throw Error(`Restaurant either has nonunique ID, or does not exist.`);
+    throw new ResourceNotFoundError(
+        `Restaurant either has nonunique ID, or does not exist.`,
+    );
   }
   await updateRestaurantAverageRating(restaurantId);
   return await restaurants.get(restaurantId);
@@ -144,7 +151,7 @@ async function getAll(restaurantId) {
   let res = await col.aggregate(pipeline);
   res = await res.toArray();
   if (!res) {
-    throw new Error(`No restaurant by ID (${id}) exists`);
+    throw new ResourceNotFoundError(`No restaurant by ID (${id}) exists`);
   }
   return res[0].result;
 }
@@ -154,9 +161,10 @@ async function getAll(restaurantId) {
  * @return {object} Returns the object requested.
  */
 async function get(reviewId) {
+  const col = await getCollection();
   reviewId = tryTrim(reviewId);
-  reviewId = validateId(reviewId);
-  const filter = {'reviews._id': reviewId};
+  validateId(reviewId);
+  const filter = {'reviews._id': new mdb.ObjectId(reviewId)};
   const matchingStage = {
     $match: filter,
   };
@@ -165,14 +173,25 @@ async function get(reviewId) {
 
   const unwindArr = {$unwind: '$result'};
 
-  const matchIdInSubDoc = {$match: {'result._id': reviewId}};
+  const matchIdInSubDoc = {$match: {'result._id': new mdb.ObjectId(reviewId)}};
+
+  const convertType = {
+    $addFields: {
+      'result._id': {
+        '$convert': {
+          input: '$$CURRENT.result._id',
+          to: 'string',
+        },
+      },
+    },
+  };
 
   results = await col.aggregate(
-      [matchingStage, getReviewsOnly, unwindArr, matchIdInSubDoc],
+      [matchingStage, getReviewsOnly, unwindArr, matchIdInSubDoc, convertType],
   );
   results = await results.toArray();
-  if (!results) {
-    throw new Error(`No review by id (${reviewId}) exists.`);
+  if (!results || results.length === 0) {
+    throw new ResourceNotFoundError(`No review by id (${reviewId}) exists.`);
   }
   return results[0].result;
 }
@@ -182,12 +201,21 @@ async function get(reviewId) {
  * @param {string} reviewId The id of the review to remove.
  */
 async function remove(reviewId) {
+  reviewId = tryTrim(reviewId);
+  validateId(reviewId);
+
   // Ensure that the review exists
   review = await get(reviewId);
-  // Delete the review
 
+  // Delete the review
   const col = await getCollection();
-  restaurantDocument = await col.findOne({'reviews._id': reviewId});
+  const restaurantDocument = await col.findOne(
+      {'reviews._id': new mdb.ObjectId(reviewId)},
+  );
+  // console.log('Found Document: ' + restaurantDocument);
+  if (! restaurantDocument) {
+    throw new ResourceNotFoundError('The review was not found.');
+  }
   const restaurantId = restaurantDocument._id;
   updateResult = await col.updateOne(
       {_id: restaurantId},
@@ -195,26 +223,26 @@ async function remove(reviewId) {
         $pull:
         {
           reviews:
-            {_id: reviewId},
+            {_id: new mdb.ObjectId(reviewId)},
         },
       },
   );
 
   if (!updateResult.acknowledged) {
-    throw new Error(
+    throw new ServerSideError(
         'Database failed to acknowledge pulling the review ' +
         'from the restaurant\'s document.',
     );
   }
-
-  if (updateResult.updatedCount !== 1) {
+  // console.log(JSON.stringify(updateResult));
+  if (updateResult.modifiedCount !== 1) {
     // This shouldn't happen
     // 1. The get operation ensures it actually exists
     // 2. MongoDB ObjectIds are guaranteed to be unique
-    throw new Error('Multiple reviews deleted due to nonunique ID');
+    throw new ServerSideError('Multiple reviews deleted due to nonunique ID');
   }
 
-  updateRestaurantAverageRating(restaurantId);
+  await updateRestaurantAverageRating(restaurantId.toString());
 }
 
 module.exports = {create, getAll, get, remove};
