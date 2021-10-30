@@ -1,0 +1,9 @@
+{
+    "MARVEL": {
+        "PUBKEY": "***REMOVED***",
+        "PRIVKEY": "***REMOVED***"
+    },
+    "APP": {
+        "PUBDIR": "public"
+    }
+}
