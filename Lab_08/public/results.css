@@ -1,10 +1,10 @@
 #searchBar{
     text-align: center;
-    font-size: 1.2rem;
+    font-size: 1rem;
 }
 #searchBarField{
-    font-size: 1.5rem;
-    width: 30em;
+    font-size: 1rem;
+    width: 20em;
     text-align:center;
     color:#2a3f94;
     background-color: #fbf0e5;
@@ -20,20 +20,28 @@ nav{
     text-align: center;
 }
 header{
-    margin-bottom: 100px;
+    margin-bottom: 20px;
 }
-footer>p{
-    display: block;
+footer>p:first{
     margin-top: 100px;
     /* color:#2a3f94; */
-    color: #880000;
+}
+footer>p{
+    margin-top:0px;
     text-align: center;
-    margin-bottom: 100px;
+    display: block;
+    color: #880000;
     margin-right: 0px;
     margin-left: 0px;
 }
+footer>p:last-child{
+    margin-bottom: 100px;
+}
 .nav-ul{
     list-style: none;
+}
+#resultsList{
+    list-style:none;
 }
 .material-icons{
     vertical-align:middle;
@@ -45,7 +53,7 @@ li{
 }
 #submitSearch{
     height:2rem;
-    width:10rem;
+    width:5rem;
 }
 
 .hidden{
@@ -54,7 +62,7 @@ li{
 
 label{
     display:inline-block;
-    margin-bottom:15px;
+    margin-bottom:5px;
 }
 p {
     margin-top: 50px;
@@ -63,6 +71,10 @@ p {
     margin-right: 10px;
     display:inline-block;
 }
-h1 {
-    text-align: center;
+p.not-found{
+    margin-top:10px;
+    color:#fa0101;
 }
+table {
+    border-spacing: 10px;
+  }

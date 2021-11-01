@@ -1,0 +1,23 @@
+<div id="searchResultsDiv">
+    <h1>Characters Found</h1>
+    <h2>{{searchTerm}}</h2>
+    {{#if marvelResponse}}
+    <ul>
+        {{#each marvelResponse}}
+        <a href="/characters/{{this.id}}">
+            <li id="resultsList">
+                <table>
+                    <tr>
+                        <td><img src="{{this.thumbnail.path}}/portrait_small.{{this.thumbnail.extension}}"
+                                alt="Portrait of {{this.name}}"></td>
+                        <td>{{this.name}}</td>
+                    </tr>
+                </table>
+            </li>
+        </a>
+        {{/each}}
+        {{else}}
+        <p class="not-found">We're sorry, but no results were found for {{searchTerm}}.</p>
+    </ul>
+    {{/if}}
+</div>

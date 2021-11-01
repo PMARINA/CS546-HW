@@ -12,7 +12,7 @@ app.use(express.json());
 // Need urlencoded args
 app.use(express.urlencoded({extended: true}));
 
-app.engine('handlebars', bs({defaultLayout: 'main'}));
+app.engine('handlebars', bs({defaultLayout: 'homePage'}));
 app.set('view engine', 'handlebars');
 
 

@@ -1,0 +1,10 @@
+<form role="search" action="/search" method="post" id="searchBar">
+    <label for="searchBarField">Search for a Marvel Character:</label>
+    <br>
+    <input type="text" id="searchBarField" placeholder="Character Name" name="Search Term" value={{#if
+        formText}}"{{formText}}"{{else}}""{{/if}} />
+    <br>
+    <label for="submit-search" class="hidden">Search</label>
+    <input type='submit' id="submitSearch" value="Search">
+    </button>
+</form>

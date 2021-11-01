@@ -4,6 +4,6 @@
         "PRIVKEY": "***REMOVED***"
     },
     "APP": {
-        "PUBDIR": "public"
+        "PUBDIR": "/public"
     }
 }
