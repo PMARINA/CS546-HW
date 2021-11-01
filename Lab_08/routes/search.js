@@ -12,29 +12,43 @@ router.post('/', async (req, res) => {
     } else {
       errMsg = 'Search term was either empty or just empty spaces.';
     }
-    res.status(400).render('errors/main',
-        {
-          layout: 'errors',
-          searchTerm: searchTerm,
-          form: await ebs.render('views/search/form_horizontal.handlebars',
-              {
-                formText: searchTerm,
-              }),
-          errCode: 400,
-          errMsg,
-        });
+    res.status(400).render('errors/main', {
+      layout: 'errors',
+      searchTerm: searchTerm,
+      form: await ebs.render('views/search/form_horizontal.handlebars', {
+        formText: searchTerm,
+      }),
+      errCode: 400,
+      errMsg,
+    });
   }
-  const marvelResponse = (await data(searchTerm)).data.results;
-  res.render('results/searchResults',
-      {
-        layout: 'resultsPages',
-        marvelResponse: marvelResponse,
-        searchTerm: searchTerm,
-        form: await ebs.render('views/search/form.handlebars',
-            {
-              formText: searchTerm}),
-      });
+  let marvelResponse = await data(searchTerm);
+  if (typeof marvelResponse == 'string') {
+    errCode = marvelResponse.match(/^.*?(\d*)$/)[1];
+    errCode = 400;
+    // Simon told me to hard code it to 400,
+    // instead of using the one Marvel returned.
+    res.render('errors/main', {
+      layout: 'errors',
+      searchTerm: searchTerm,
+      form: await ebs.render('views/search/form_horizontal.handlebars', {
+        formText: searchTerm,
+      }),
+      errCode,
+      errMsg: marvelResponse,
+    });
+    return;
+  } else {
+    marvelResponse = marvelResponse.data.results;
+  }
+  res.render('results/searchResults', {
+    layout: 'resultsPages',
+    marvelResponse: marvelResponse,
+    searchTerm: searchTerm,
+    form: await ebs.render('views/search/form.handlebars', {
+      formText: searchTerm,
+    }),
+  });
 });
 
 module.exports = router;
-

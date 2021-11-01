@@ -1,82 +1,109 @@
-#searchBar{
+#searchBar {
     text-align: center;
     font-size: 1rem;
 }
-#searchBarField{
+
+#searchBarField {
     font-size: 1rem;
     width: 20em;
-    text-align:center;
-    color:#2a3f94;
+    text-align: center;
+    color: #2a3f94;
     background-color: #fbf0e5;
-    margin-bottom:10px;
+    margin-bottom: 10px;
 }
-body{
-    background-color:#F5DABF;
+
+body {
+    background-color: #F5DABF;
 }
-nav{
+
+nav {
     background-color: #f4c290;
     margin: 25px;
-    padding:10px;
+    padding: 10px;
     text-align: center;
 }
-header{
+
+header {
     margin-bottom: 20px;
 }
-footer>p:first{
+
+footer>p:first {
     margin-top: 100px;
     /* color:#2a3f94; */
 }
-footer>p{
-    margin-top:0px;
+
+footer>p {
+    margin-top: 0px;
     text-align: center;
     display: block;
     color: #880000;
     margin-right: 0px;
     margin-left: 0px;
 }
-footer>p:last-child{
+
+footer>p:last-child {
     margin-bottom: 100px;
 }
-.nav-ul{
+
+footer {
+    clear: both;
+}
+
+.nav-ul {
     list-style: none;
 }
-#resultsList{
-    list-style:none;
-}
-.material-icons{
-    vertical-align:middle;
-    font-size:1rem;
+
+#resultsList {
+    list-style: none;
 }
 
-li{
-    font-size:1rem; 
-}
-#submit-search{
-    height:2rem;
-    width:5rem;
+.material-icons {
+    vertical-align: middle;
+    font-size: 1rem;
 }
 
-.hidden{
-    display:none;
+li {
+    font-size: 1rem;
 }
 
-label{
-    display:inline-block;
-    margin-bottom:5px;
+#submit-search {
+    height: 2rem;
+    width: 5rem;
 }
-h1, h2, h3, h4, h5, h6{
-    margin-left:50px;
-    margin-right:50px;
+
+.hidden {
+    display: none;
 }
+
+label {
+    display: inline-block;
+    margin-bottom: 5px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    margin-left: 50px;
+    margin-right: 50px;
+}
+
 p {
-    margin: 50px;
+    margin-top: 50px;
     text-align: left;
-    display:inline-block;
+    margin-left: 40px;
+    margin-right: 40px;
+    display: block;
+    /* display:inline; */
 }
-p.not-found{
-    margin-top:10px;
-    color:#fa0101;
+
+p.not-found {
+    margin-top: 10px;
+    color: #fa0101;
 }
+
 table {
     border-spacing: 10px;
-  }
+}
