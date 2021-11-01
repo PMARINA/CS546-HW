@@ -11,7 +11,8 @@ const md5 = require('blueimp-md5');
  */
 async function getResults(searchTerm, LIMIT_TO = 20) {
   if (typeof searchTerm != 'string' || searchTerm.trim().length <= 0) {
-    throw new Error('Expected nonempty string for searchTerm');
+    // throw new Error('Expected nonempty string for searchTerm');
+    return 'Error - Expected nonempty string for searchTerm - Error 400';
   }
   searchTerm = searchTerm.trim();
   const ts = new Date().getTime();
@@ -26,7 +27,8 @@ async function getResults(searchTerm, LIMIT_TO = 20) {
   try {
     res = (await axios.get(url)).data;
   } catch (e) {
-    return e.message;
+    return 'Simon told me to return a 400 despite the error code from Marvel... Error from Marvel endpoint: ' + e.response.data.status + ' - Error ' + e.response.data.code;
+    // return e.message;
   }
   return res;
 }
