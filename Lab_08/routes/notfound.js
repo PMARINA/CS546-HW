@@ -10,7 +10,7 @@ router.get('*', async (req, res) => {
               formText: '',
             }),
         errCode: 404,
-        errMsg: 'Invalid Path',
+        errMsg: `http://${req.get('Host')}${req.originalUrl} is not a valid path on this server.`,
       });
 });
 
