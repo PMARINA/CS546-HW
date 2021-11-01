@@ -9,9 +9,10 @@ const md5 = require('blueimp-md5');
  * @return {string[]} The results from the search
  */
 async function getResults(searchTerm) {
-  if (typeof searchTerm != 'string') {
-    throw new Error('Expected String for SearchTerm');
+  if (typeof searchTerm != 'string' || searchTerm.trim().length <= 0) {
+    throw new Error('Expected nonempty string for searchTerm');
   }
+  searchTerm = searchTerm.trim();
   const ts = new Date().getTime();
   const publickey = config.MARVEL.PUBKEY;
   const privatekey = config.MARVEL.PRIVKEY;
@@ -20,11 +21,8 @@ async function getResults(searchTerm) {
   const baseUrl = 'https://gateway.marvel.com:443/v1/public/characters?nameStartsWith=';
   const url = baseUrl + encodeURI(searchTerm) +
    '&ts=' + ts + '&apikey=' + publickey + '&hash=' + hash;
+  console.log(url);
   res = (await axios.get(url)).data;
-  //   console.log(res);
-  if (res.code !== 200) {
-    throw new Error(`API call returned error code: ${res.code}`);
-  }
   return res;
 }
 

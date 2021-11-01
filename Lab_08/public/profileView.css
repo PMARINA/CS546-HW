@@ -17,7 +17,7 @@ nav{
     background-color: #f4c290;
     margin: 25px;
     padding:10px;
-    text-align: center;
+    text-align: left;
 }
 header{
     margin-bottom: 20px;
@@ -37,8 +37,18 @@ footer>p{
 footer>p:last-child{
     margin-bottom: 100px;
 }
+footer{
+    clear:both;
+}
 .nav-ul{
     list-style: none;
+    margin-left:0;
+    margin-right:0;
+}
+nav ul li{
+    margin-left:0;
+    margin-right:0;
+    display:inline;
 }
 #resultsList{
     list-style:none;
@@ -64,19 +74,43 @@ label{
     display:inline-block;
     margin-bottom:5px;
 }
-h1, h2, h3, h4, h5, h6{
-    margin-left:50px;
-    margin-right:50px;
-}
 p {
-    margin: 50px;
+    margin-top: 50px;
     text-align: left;
-    display:inline-block;
+    margin-left: 40px;
+    margin-right: 40px;
+    display:block;
+    /* display:inline; */
 }
 p.not-found{
     margin-top:10px;
     color:#fa0101;
 }
-table {
-    border-spacing: 10px;
-  }
+ul,li{
+    margin-left:20px;
+    margin-right:20px;
+    /* display:inline; */
+}
+form{
+    display:inline;
+    position:absolute;
+    right:45px;
+    top:45px;
+    /* float:right; */
+}
+#errContent{
+    margin:50px;
+}
+h1{
+    text-align: center;
+}
+img{
+    /* position:absolute; */
+    float:right;
+    margin-right:30px;
+    margin-left:30px;
+}
+h1,h2,h3,h4,h5,h6{
+    margin-left:30px;
+    margin-right:30px;
+}

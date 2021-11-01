@@ -14,9 +14,9 @@ router.post('/', async (req, res) => {
     }
     res.status(400).render('errors/main',
         {
-          layout: 'errors.handlebars',
+          layout: 'errors',
           searchTerm: searchTerm,
-          form: await ebs.render('views/search/form.handlebars',
+          form: await ebs.render('views/search/form_horizontal.handlebars',
               {
                 formText: searchTerm,
               }),
@@ -25,7 +25,7 @@ router.post('/', async (req, res) => {
         });
   }
   const marvelResponse = (await data(searchTerm)).data.results;
-  res.render('results/main',
+  res.render('results/searchResults',
       {
         layout: 'resultsPages',
         marvelResponse: marvelResponse,

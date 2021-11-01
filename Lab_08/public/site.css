@@ -43,7 +43,7 @@ footer>p{
 li{
     font-size:1rem; 
 }
-#submitSearch{
+#submit-search{
     height:2rem;
     width:10rem;
 }
@@ -59,8 +59,8 @@ label{
 p {
     margin-top: 50px;
     text-align: left;
-    margin-left: 10px;
-    margin-right: 10px;
+    margin-left: 50px;
+    margin-right: 50px;
     display:inline-block;
 }
 h1 {

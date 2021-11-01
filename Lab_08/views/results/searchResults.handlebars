@@ -2,10 +2,10 @@
     <h1>Characters Found</h1>
     <h2>{{searchTerm}}</h2>
     {{#if marvelResponse}}
-    <ul>
+    <ul id='resultsList'>
         {{#each marvelResponse}}
-        <a href="/characters/{{this.id}}">
-            <li id="resultsList">
+        <li>
+            <a href="/characters/{{this.id}}">
                 <table>
                     <tr>
                         <td><img src="{{this.thumbnail.path}}/portrait_small.{{this.thumbnail.extension}}"
@@ -13,11 +13,11 @@
                         <td>{{this.name}}</td>
                     </tr>
                 </table>
-            </li>
-        </a>
+            </a>
+        </li>
         {{/each}}
-        {{else}}
-        <p class="not-found">We're sorry, but no results were found for {{searchTerm}}.</p>
     </ul>
+    {{else}}
+    <p class="not-found">We're sorry, but no results were found for {{searchTerm}}.</p>
     {{/if}}
 </div>

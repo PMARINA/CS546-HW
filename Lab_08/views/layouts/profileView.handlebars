@@ -4,37 +4,38 @@
 <head>
     <meta charset="utf-8">
     <meta name="description" content="Marvel Character Search & Info">
-    <title>Error</title>
+    <title>{{title}}</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="/public/errors.css">
+    <link rel="stylesheet" href="/public/profileView.css">
 </head>
 
 <body>
     <header>
         <nav>
-            <span>
             <ul class="nav-ul">
                 <li><span>
-                    <a href="/">
-                        <span class="material-icons">home</span>
-                        Character Finder - Home
-                    </a>
-                    </span> 
+                        <a href="/">
+                            <span class="material-icons">home</span>
+                            Character Finder - Home
+                        </a>
+                    </span>
                 </li>
             </ul>
             {{{form}}}
-            </span>
         </nav>
     </header>
 
     <main>
-        {{{body}}}
+        <article>
+            {{{body}}}
+        </article>
     </main>
     <footer>
         <p><a href="/">Make another search</a></p>
         <p>
             Character Finder - CS 546WS Lab 8 - ***REMOVED*** ***REMOVED***
         </p>
+        <p>{{{attrHTML}}}</p>
     </footer>
 </body>
 

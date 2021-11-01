@@ -1,0 +1,18 @@
+<div id="characterInfo">
+    <h1>{{marvelResponse.name}}</h1>
+    <img src="{{marvelResponse.thumbnail.path}}/portrait_uncanny.{{marvelResponse.thumbnail.extension}}"
+        alt="Portrait of {{marvelResponse.name}}">
+    {{#if marvelResponse.description}}
+    <p>{{marvelResponse.description}}</p>
+    {{/if}}
+    {{#if marvelResponse.comics.items}}
+    <h2>Comics</h2>
+    <ul>
+        {{#each marvelResponse.comics.items}}
+        <li>
+            {{this.name}}
+        </li>
+        {{/each}}
+    </ul>
+    {{/if}}
+</div>

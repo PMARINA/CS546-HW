@@ -17,7 +17,7 @@ nav{
     background-color: #f4c290;
     margin: 25px;
     padding:10px;
-    text-align: center;
+    text-align: left;
 }
 header{
     margin-bottom: 20px;
@@ -64,19 +64,28 @@ label{
     display:inline-block;
     margin-bottom:5px;
 }
-h1, h2, h3, h4, h5, h6{
-    margin-left:50px;
-    margin-right:50px;
-}
 p {
-    margin: 50px;
+    margin-top: 50px;
     text-align: left;
+    margin-left: 10px;
+    margin-right: 10px;
     display:inline-block;
+    display:inline;
 }
 p.not-found{
     margin-top:10px;
     color:#fa0101;
 }
-table {
-    border-spacing: 10px;
-  }
+ul,li{
+    display:inline-block;
+}
+form{
+    display:inline;
+    position:absolute;
+    right:45px;
+    top:45px;
+    /* float:right; */
+}
+#errContent{
+    margin:50px;
+}

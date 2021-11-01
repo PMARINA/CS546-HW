@@ -1,9 +1,7 @@
 <form role="search" action="/search" method="post" id="searchBar">
-    <label for="searchBarField">Search for a Marvel Character:</label>
-    <br>
+    <label for="searchBarField" class="hidden">Search for a Marvel Character:</label>
     <input type="text" id="searchBarField" placeholder="Character Name" name="Search Term" value={{#if
-        formText}}"{{formText}}"{{else}}""{{/if}} aria-label="Search Field" {{#if autofocus}}autofocus{{/if}}/>
-    <br>
+        formText}}"{{formText}}"{{else}}""{{/if}} aria-label="Search Field"/>
     <label for="submit-search" class="hidden">Search</label>
     <input type='submit' id="submit-search" value="Search" aria-label="Search">
 </form>

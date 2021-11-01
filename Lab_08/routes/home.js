@@ -5,7 +5,7 @@ const ebs = require('express-handlebars').create();
 
 router.get('/', async (req, res) => {
   res.render('search/searchPage',
-      {form: await ebs.render('views/search/form.handlebars')});
+      {form: await ebs.render('views/search/form.handlebars', {autofocus: true})});
 });
 
 module.exports = router;
