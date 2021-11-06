@@ -1,0 +1,28 @@
+{
+    "name": "cs-546-lab-9",
+    "version": "1.0.0",
+    "description": "CS 546WS - Stevens Institute of Technology - Fall 2021",
+    "main": "app.js",
+    "scripts": {
+        "start": "node app.js",
+        "test": "nodemon app.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/PMARINA/CS546-HW.git"
+    },
+    "author": "***REMOVED*** ***REMOVED*** ***REMOVED***",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/PMARINA/CS546-HW/issues"
+    },
+    "homepage": "https://github.com/PMARINA/CS546-HW#readme",
+    "devDependencies": {
+        "eslint": "^8.2.0",
+        "eslint-config-google": "^0.14.0",
+        "nodemon": "*"
+    },
+    "dependencies": {
+        "express": "^4.17.1"
+    }
+}

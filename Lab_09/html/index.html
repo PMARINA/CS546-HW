@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Palindrome Finder</title>
+    <link rel="stylesheet" href="/public/site.css" />
+</head>
+
+<body>
+    <h1>Palindrome Finder</h1>
+    <p>
+        Enter your queries in the form below and see if they are palindromes (only considering alphanumeric charcaters).
+    </p>
+
+    <p>
+        <span id="blue">Blue text</span> indicates a term is a palindrome.
+        <br>
+        <span id="red">Red text</span> indicates a term is not a palindrome.
+    </p>
+
+    <form>
+        <label for="inputField">Phrase</label>: 
+        <input type="text" id="inputField" name="phrase" autocomplete="off" autofocus />
+        <label for='submit' hidden>Submit</label>
+        <input type="submit" id="submit">
+    </form>
+    <div id="results">
+        <ol id="attempts">
+
+        </ol>
+    </div>
+
+
+    <footer>
+        <p id="retHome"><a href="/">Return Home?</a></p>
+        <p class="ignore">Site by <a href="https://linkedin.com/in/***REMOVED***-***REMOVED***/">***REMOVED*** ***REMOVED***</a> (<span
+                id="studentID">***REMOVED***</span>) of <a href="https://stevens.edu/" id="stevensLink">Stevens Institute of
+                Technology</a> for CS 546WS (Fall 2021)</p>
+    </footer>
+    <script src="/public/index.js"></script>
+</body>
+
+</html>
