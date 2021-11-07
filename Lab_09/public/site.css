@@ -3,7 +3,9 @@ body {
     background-color:#F3E9D2;
 }
 .errorH {
-    color: red;
+    display:block;
+    color: rgb(200,0,0);
+    /* background-color: #000000; */
     text-align: center;
 }
 p {
@@ -28,10 +30,11 @@ form{
     text-align: center;
 }
 .ignore{
-    color:gray;
+    color:#686868;
 }
 #studentID{
-    color:green;
+    color:#007b00;
+    /* background-color: #555555; */
 }
 footer{
     margin-top:75px;
@@ -48,4 +51,5 @@ footer{
 }
 #attempts .not-palindrome, #red{
     color: #FF0000;
+    background-color: #000000;
 }
