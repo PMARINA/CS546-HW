@@ -1,10 +1,7 @@
-// const postRoutes = require('./posts');
-// const userRoutes = require('./users');
 const homePage = require('./home');
 const search = require('./search');
 const character = require('./character');
 const notfound = require('./notfound');
-// const path = require('path');
 
 const constructorMethod = (app) => {
   app.use('/', homePage);

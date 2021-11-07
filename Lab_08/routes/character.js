@@ -2,9 +2,17 @@ const express = require('express');
 const router = new express.Router();
 const data = require('../data/characters').getCharacter;
 const ebs = require('express-handlebars').create();
+/**
+ * Get a character from the MCU with a given id per the url param
+ */
 router.get('/:id', async (req, res) => {
-  // console.log(req);
+  // Get ID from url
   const id = req.params.id;
+  
+  // Validate that the ID is a valid input
+  // String
+  // Not Empty
+  // String contains/is a number
   if (typeof id !== 'string' || id.trim().length <= 0 || isNaN(id.trim())) {
     let errMsg = undefined;
     if (typeof id !== 'string') {
@@ -16,13 +24,14 @@ router.get('/:id', async (req, res) => {
     } else {
       errMsg = 'Unknown error.';
     }
+    // If there is something wrong during validation, it's a client-side issue
     res.status(400).render('errors/main',
         {
           layout: 'errors',
           id: id,
           form: await ebs.render('views/search/form.handlebars',
               {
-                formText: id,
+                formText: id, // No particular reason to, but why not
               }),
           errCode: 400,
           errMsg,
@@ -43,10 +52,11 @@ router.get('/:id', async (req, res) => {
           attrHTML: response.attributionHTML,
           title: marvelResponse.name,
         });
-  } else {
+  } else { //
     res.render('errors/main', {
       layout: 'errors',
       id: id,
+      // TODO: If res.code != 200, then use errCode = res.code, instead of assuming that it's 404
       errCode: 404,
       errMsg: 'Character not found.',
       form: await ebs.render('views/search/form_horizontal.handlebars'),
