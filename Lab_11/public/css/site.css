@@ -1,0 +1,27 @@
+#show {
+    display: none;
+}
+
+#showList {
+    display: none;
+}
+
+#homeLink {
+    display: none;
+}
+
+.image {
+    padding-bottom: 50px;
+}
+
+.dt {
+    font-weight: bold;
+}
+
+.dd {
+    padding-bottom: 10px;
+}
+
+.block:not(:last-child), .box:not(:last-child), .breadcrumb:not(:last-child), .content:not(:last-child), .level:not(:last-child), .message:not(:last-child), .notification:not(:last-child), .pagination:not(:last-child), .progress:not(:last-child), .subtitle:not(:last-child), .table-container:not(:last-child), .table:not(:last-child), .tabs:not(:last-child), .title:not(:last-child) {
+    margin-bottom:5px;
+}
