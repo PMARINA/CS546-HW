@@ -1,0 +1,47 @@
+<div class="section hero is-fullheight is-dark">
+  <div class="hero-body">
+    <div class="container content">
+      <div class="columns is-centered">
+        <div class="column is-6-tablet is-5-desktop is-4-widescreen">
+          <h1 class="title">Sign Up</h1>
+          <p class="subtitle">Sign up to see your secret page</p>
+          {{#if genHelp}}
+          <p class="is-danger block">{{genHelp}}</p>
+          {{/if}}
+          <form id="signup-form" method="post" class="box" action="/signup">
+            <div class="field">
+              <label class="label" for="username">Username</label>
+              <div class="control">
+                <input type="text" name="username" id="username" class="input {{#if unameHelp}} is-danger {{/if}}" {{#if uname}} value="{{uname}}" {{/if}}/>
+              </div>
+              {{#if unameHelp}}
+              <p class="help is-danger">{{unameHelp}}</p>
+              {{/if}}
+            </div>
+            <div class="field">
+              <label class="label" for="password">Password</label>
+              <div class="control">
+                <input type="password" name="password" id="password" class="input {{#if pwdHelp}} is-danger {{/if}}"/>
+                {{#if pwdHelp}}
+                <p class="help is-danger">{{pwdHelp}}</p>
+                {{/if}}
+              </div>
+            </div>
+            <div class="control">
+              <label for="submit" hidden>Sign Up</label>
+              <input
+                class="button is-primary input"
+                type="submit"
+                name="submit"
+                id="submit"
+                value="Sign Up"
+              />
+            </div>
+          </form>
+
+          <p class="block"><a href="/" class="button is-link input">Already have an account? Click here to log-in</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

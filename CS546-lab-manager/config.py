@@ -3,7 +3,7 @@ LNAME = "***REMOVED***"
 CWID = ***REMOVED***
 
 DEFAULT_START_SCRIPT = 'node index.js'
-NAME_REGEX = r'^cs-546-lab-\d$'
+NAME_REGEX = r'^cs-546-lab-\d+$'
 FOLDER_NAME = 'cs-546-lab-'
 SECTION = 'WS'
 
