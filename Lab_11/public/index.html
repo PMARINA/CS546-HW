@@ -1,53 +1,78 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta content="width=device-width, initial-scale=1" name="viewport">
-    <title>TV Guide</title>
-    <link href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css" rel="stylesheet">
-    <link href="/css/site.css" rel="stylesheet">
+  <meta name="charset" content="UTF-8">
+  <!-- Bulma meta -->
+  <meta content="width=device-width, initial-scale=1" name="viewport">
+
+  <title>TV Guide</title>
+
+  <!-- Bulma Stylesheet -->
+  <link href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css" rel="stylesheet">
+
+  <!-- Site CSS Customizations -->
+  <link href="/css/site.css" rel="stylesheet">
 </head>
 <body>
 
-<section class="section columns">
-    <div class="container content is-three-quarters-mobile is-two-thirds-tablet is-half-desktop is-one-third-widescreen is-one-quarter-fullhd column">
-        <h1 id="siteTitle">TV Guide</h1>
+<!-- The search form at the top -->
+<div class="section columns">
+  <div
+    class="container content is-three-quarters-mobile is-two-thirds-tablet is-half-desktop is-one-third-widescreen is-one-quarter-fullhd column">
 
-        <form id="searchForm">
-            <div class="field">
-                <label class="label is-hidden" for="search_term">Search Term</label>
-                <div class="control">
-                    <input autocomplete="off" autofocus class="input" id="search_term" type="text" placeholder="search term">
-                </div>
-            </div>
-            <div class="field">
-                <input class="control button input has-text-centered is-link" type="submit" value="Search">
-            </div>
-        </form>
-    </div>
-</section>
+    <h1 id="siteTitle">TV Guide</h1>
 
-<section class="section container content">
-    <ul id="showList"></ul>
+    <form id="searchForm" role="search">
 
-    <div id="show"></div>
-</section>
+      <!-- Search bar for text input -->
+      <div class="field">
+        <label class="label is-hidden" for="search_term">Search Term</label>
+        <div class="control">
+          <input autocomplete="off" autofocus class="input" id="search_term" type="text" placeholder="search term">
+        </div>
+      </div>
 
-<section class="section">
-    <div class="container content">
-        <a href="/" id="homeLink">Back to All Shows</a>
-    </div>
-</section>
+      <!-- The search "submit" button -->
+      <div class="field">
+        <input class="control button input has-text-centered is-link" type="submit" value="Search">
+      </div>
 
+    </form>
+  </div>
+</div>
 
+<!-- The loading thing for sanity -->
+<div id="loading" role="alert" aria-label="loading...">
+  <button class="button is-loading is-static is-centered">Loading...</button>
+</div>
+
+<!-- Shows either in the home page or the search page -->
+<div class="container content columns">
+  <ul id="showList" class="column is-half is-offset-one-quarter"></ul>
+
+  <div id="show" class="column is-half is-offset-one-quarter"></div>
+</div>
+
+<!-- The reflink back home -->
+<div>
+  <div class="container content">
+    <a href="/" id="homeLink">Back to All Shows</a>
+  </div>
+</div>
+
+<!-- Basic footer with Name & Student ID -->
 <footer class="footer">
-    <div class="content has-text-centered">
-        <p>Site by: ***REMOVED*** ***REMOVED*** (***REMOVED***)</p>
-    </div>
+  <div class="content has-text-centered">
+    <p>Site by: ***REMOVED*** ***REMOVED*** (***REMOVED***)</p>
+  </div>
 </footer>
+
+<!-- Get JQuery First -->
 <script crossorigin="anonymous"
         integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
         referrerpolicy="no-referrer" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<!-- Then the client side rendering code -->
 <script crossorigin="anonymous" referrerpolicy="no-referrer" src="/js/site.js"></script>
+
 </body>
 </html>

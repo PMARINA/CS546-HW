@@ -109,3 +109,9 @@ dist
 # Submissions to Canvas
 ***REMOVED***_***REMOVED***/
 ***REMOVED***_***REMOVED***.zip
+
+# Ignore jetbrains idea files
+**/.idea/
+
+# Ignore pycache
+**/__pycache__/
